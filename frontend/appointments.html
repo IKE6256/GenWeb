@@ -1,0 +1,195 @@
+<!-- appointments.html -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GenWeb | Mis Citas</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.css" rel="stylesheet">
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Calendar Styles -->
+  <link rel="stylesheet" href="appointments.css">
+</head>
+<body class="appointments-page">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <ul class="sidebar-nav">
+      <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+      <li class="nav-item"><a class="nav-link" href="citas.html">Agendar Cita</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
+        <img src="logo.png" alt="GenWeb" class="topbar-logo">
+      </div>
+    </header>
+
+    <section class="content">
+      <h2>Mis Citas</h2>
+      
+      <!-- Filtros de búsqueda -->
+      <div class="search-filters">
+        <h3><i class="fa fa-search"></i> Buscar Citas</h3>
+        <div class="filter-grid">
+          <div class="filter-item">
+            <label for="filtroFecha"><i class="fa fa-calendar"></i> Fecha:</label>
+            <input type="date" id="filtroFecha" class="form-control">
+          </div>
+          <div class="filter-item">
+            <label for="filtroTipo"><i class="fa fa-laptop-medical"></i> Tipo:</label>
+            <select id="filtroTipo" class="form-control">
+              <option value="">Todas</option>
+              <option value="Virtual">Virtual</option>
+              <option value="Presencial">Presencial</option>
+            </select>
+          </div>          <div class="filter-actions">
+            <button id="btnLimpiar" class="btn-clear"><i class="fa fa-times"></i> Limpiar</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Lista de citas -->
+      <div id="citasList" class="result-card"></div>
+      <div id="calendar"></div>
+    </section>
+  </div>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js"></script>
+  <!-- Scripts de la aplicación -->
+  <script src="calendar.js"></script>
+  <script src="appointments.js"></script>
+  <!-- Edit Modal -->
+  <div id="citaModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Detalle de la Cita</h3>      <!-- Estado de la cita -->
+      <div id="estadoCitaContainer" style="margin-bottom: 20px; text-align: center;">
+        <span id="estadoBadgeModal" class="estado-badge">Pendiente</span>
+      </div>
+      
+      <form id="editCitaForm">
+        <input type="hidden" id="editCitaId">
+        <input type="hidden" id="editEstado">
+        <ul class="cita-details-list">
+          <li><i class="fa fa-user"></i><input type="text" id="editNombre" class="form-control" placeholder="Nombre"></li>
+          <li><i class="fa fa-envelope"></i><input type="email" id="editCorreo" class="form-control" placeholder="Correo"></li>
+          <li><i class="fa fa-phone"></i><input type="text" id="editTelefono" class="form-control" placeholder="Teléfono"></li>          <li><i class="fa fa-user-md"></i>
+            <select id="editDoctorId" class="form-control">
+              <option value="">Seleccionar Doctor</option>
+              <option value="Dr. Alonso Jimenez">Dr. Alonso Jimenez - Neurología</option>
+              <option value="Dra. Melissa Lara">Dra. Melissa Lara - Pediatría</option>
+              <option value="Dr. Diego Hernandez">Dr. Diego Hernandez - Cardiología</option>
+              <option value="Dra. Kelly Palomares">Dra. Kelly Palomares - Dermatología</option>
+              <option value="Dr. Mauricio Rocha">Dr. Mauricio Rocha - Infectología</option>
+              <option value="Dr. Alexis Hernandez">Dr. Alexis Hernandez - Otorrinolaringología</option>
+              <option value="Dr. Gonzalo Mendoza">Dr. Gonzalo Mendoza - Anestesiología</option>
+            </select>
+          </li>
+          <li><i class="fa fa-stethoscope"></i>
+            <select id="editEspecialidad" class="form-control">
+              <option value="">Seleccionar Especialidad</option>
+              <option value="Neurología">Neurología</option>
+              <option value="Pediatría">Pediatría</option>
+              <option value="Cardiología">Cardiología</option>
+              <option value="Dermatología">Dermatología</option>
+              <option value="Infectología">Infectología</option>
+              <option value="Otorrinolaringología">Otorrinolaringología</option>
+              <option value="Anestesiología">Anestesiología</option>
+            </select>
+          </li>
+          <li><i class="fa fa-laptop-medical"></i><input type="text" id="editModalidad" class="form-control" placeholder="Modalidad"></li>
+          <li><i class="fa fa-calendar"></i><input type="date" id="editFecha" class="form-control" placeholder="Fecha"></li>
+          <li><i class="fa fa-clock"></i><input type="time" id="editHora" class="form-control" placeholder="Hora"></li>
+          <li><i class="fa fa-sticky-note"></i><textarea id="editNotas" class="form-control" rows="2" placeholder="Notas"></textarea></li>
+        </ul>
+        
+        <!-- Botones de acción según el estado -->
+        <div id="botonesAccionModal" style="margin: 15px 0; display: flex; gap: 10px; justify-content: center;">
+          <button type="button" id="btnConfirmarModal" class="btn-confirmar" style="display: none;">
+            <i class="fa fa-check"></i> Confirmar Cita
+          </button>
+          <button type="button" id="btnCancelarModal" class="btn-cancelar" style="display: none;">
+            <i class="fa fa-times"></i> Cancelar Cita
+          </button>
+        </div>
+        
+        <button type="submit" class="btn-cta" style="width:100%;margin-top:10px;"><i class="fa fa-save"></i> Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para crear nueva cita -->
+  <div id="nuevaCitaModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeNuevaCita">&times;</span>
+      <h3>📅 Nueva Cita</h3>
+      
+      <form id="nuevaCitaForm">
+        <ul class="cita-details-list">
+          <li><i class="fa fa-user"></i><input type="text" id="nuevoNombre" class="form-control" placeholder="Nombre completo" required></li>
+          <li><i class="fa fa-envelope"></i><input type="email" id="nuevoCorreo" class="form-control" placeholder="Correo electrónico" required></li>
+          <li><i class="fa fa-phone"></i><input type="text" id="nuevoTelefono" class="form-control" placeholder="Teléfono" required></li>          <li><i class="fa fa-user-md"></i>
+            <select id="nuevoDoctorId" class="form-control" required>
+              <option value="">Seleccionar Doctor</option>
+              <option value="Dr. Alonso Jimenez">Dr. Alonso Jimenez - Neurología</option>
+              <option value="Dra. Melissa Lara">Dra. Melissa Lara - Pediatría</option>
+              <option value="Dr. Diego Hernandez">Dr. Diego Hernandez - Cardiología</option>
+              <option value="Dra. Kelly Palomares">Dra. Kelly Palomares - Dermatología</option>
+              <option value="Dr. Mauricio Rocha">Dr. Mauricio Rocha - Infectología</option>
+              <option value="Dr. Alexis Hernandez">Dr. Alexis Hernandez - Otorrinolaringología</option>
+              <option value="Dr. Gonzalo Mendoza">Dr. Gonzalo Mendoza - Anestesiología</option>
+            </select>
+          </li>
+          <li><i class="fa fa-stethoscope"></i>
+            <select id="nuevaEspecialidad" class="form-control" required>
+              <option value="">Seleccionar Especialidad</option>
+              <option value="Neurología">Neurología</option>
+              <option value="Pediatría">Pediatría</option>
+              <option value="Cardiología">Cardiología</option>
+              <option value="Dermatología">Dermatología</option>
+              <option value="Infectología">Infectología</option>
+              <option value="Otorrinolaringología">Otorrinolaringología</option>
+              <option value="Anestesiología">Anestesiología</option>
+            </select>
+          </li>
+          <li><i class="fa fa-laptop-medical"></i>
+            <select id="nuevaModalidad" class="form-control" required>
+              <option value="">Tipo de consulta</option>
+              <option value="Presencial">Presencial</option>
+              <option value="Virtual">Virtual</option>
+            </select>
+          </li>
+          <li><i class="fa fa-calendar"></i><input type="date" id="nuevaFecha" class="form-control" required readonly></li>
+          <li><i class="fa fa-clock"></i>
+            <select id="nuevaHora" class="form-control" required>
+              <option value="">Seleccionar hora</option>
+              <option value="08:00">08:00 AM</option>
+              <option value="09:00">09:00 AM</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="14:00">02:00 PM</option>
+              <option value="15:00">03:00 PM</option>
+              <option value="16:00">04:00 PM</option>
+              <option value="17:00">05:00 PM</option>
+            </select>
+          </li>
+          <li><i class="fa fa-sticky-note"></i><textarea id="nuevasNotas" class="form-control" rows="2" placeholder="Notas adicionales (opcional)"></textarea></li>
+        </ul>
+        
+        <button type="submit" class="btn-cta" style="width:100%;margin-top:10px;">
+          <i class="fa fa-save"></i> Crear Cita
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

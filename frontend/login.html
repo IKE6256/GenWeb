@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>GenWeb - Iniciar Sesión / Registro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Form.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body>
+    <div class="auth-container">
+        <!-- Logo o cabecera GenWeb -->
+        <div class="auth-header">
+        <img src="logo.png" alt="GenWeb Logo" class="logo-img">
+        </div>
+
+        <!-- Contenedor principal de formularios -->
+        <div class="auth-forms">
+        <!-- Pestañas de Login / Registro -->
+        <div class="tabs" style="display: none;">
+            <button id="loginTab" class="tab active" onclick="showLogin()">Iniciar Sesión</button>
+            <button id="registerTab" class="tab" onclick="showRegister()">Registro</button>
+        </div>
+
+        <!-- Formulario de Iniciar Sesión -->
+        <form id="loginForm" class="form-registro">
+            <h2>Inicia Sesión</h2>
+            <div class="form-group">
+            <label for="loginEmail">Correo Electrónico o Teléfono</label>
+            <input type="text" id="loginEmail" name="loginEmail" placeholder="usuario@ejemplo.com" required />
+            </div>
+            <div class="form-group">
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" name="loginPassword" placeholder="********" required />
+            </div>
+            <div class="form-actions">
+            <button type="submit" class="btn-primary">Ingresar</button>
+            </div>
+            <div class="form-links">
+            <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+            <div class="form-links">
+            <p>¿No tienes cuenta? <a href="#" id="goToRegister">Regístrate aquí</a></p>
+            </div>
+        </form>
+
+      <!-- Formulario de Registro -->
+      <form id="registerForm" class="form-registro">
+        <h2>Crear Cuenta</h2>
+        <div class="form-group">
+          <label for="opciones">Elige una opción:</label>
+          <select id="opciones" name="opciones">
+            <option value="opcion1">Paciente</option>
+            <option value="opcion2">Especialista</option>
+          </select>
+        </div>
+        <div class="form-group icon-input">
+        <label for="nombre">Nombre Completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="registerEmail">Correo Electrónico</label>
+          <input type="email" id="registerEmail" name="registerEmail" placeholder="usuario@ejemplo.com" required />
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="(55) 0000 0000" />
+        </div>
+        <!-- Campos adicionales para ESPECIALISTA -->
+        <div id="campos-especialista" class="fade">
+        <div class="form-group">
+            <label for="cedula">Cédula Profesional</label>
+            <input type="text" id="cedula" name="cedula" placeholder="1234567" />
+        </div>
+        <div class="form-group">
+            <label for="especialidad">Especialidad</label>
+            <input type="text" id="especialidad" name="especialidad" placeholder="Ej. Cardiología" />
+        </div>
+        </div>
+        <!---->
+        <div class="form-group">
+          <label for="registerPassword">Contraseña</label>
+          <input type="password" id="registerPassword" name="registerPassword" placeholder="********" required />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Contraseña</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="********" required />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Crear Cuenta</button>
+        </div>
+        <div class="form-links">
+            <p>¿Ya tienes cuenta? <a href="#" id="goToLogin">Inicia sesión</a></p>
+        </div>
+      </form>
+
+      <!-- Ventana para ingresar el código de 4 digitos -->
+    <div id="overlay" class="overlay">
+        <div class="ventana">
+            <button id="cerrarVentana" class="cerrar-modal">&times;</button>
+            <p>Ingresa los 4 dígitos:</p>
+            <input id="codigo" type="password" maxlength="4" pattern="\d{4}" />
+            <br><br>
+            <button type="button" onclick="cerrarModal()">Aceptar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    </body>
+    </html>
